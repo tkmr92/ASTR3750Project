@@ -6,5 +6,4 @@ Project Contributors:
 Kyle Crabb, Tarek Mackler
 
 Project Languages:
-Python3
-LaTeX
+Python3, LaTeX
