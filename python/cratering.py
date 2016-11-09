@@ -7,8 +7,4 @@ intensity = np.array(np.zeros(3))
 
 np.zip(x, y, intensity)
 
-for things in stuff:
-    do magic
-
-show magic
-
+# TODO: Add code
