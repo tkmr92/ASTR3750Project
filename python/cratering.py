@@ -1,30 +1,41 @@
 import numpy as np
 import matplotlib.pyplot as pl
+import time
+
+start = time.time()
 
 image = np.zeros([500, 500, 4])
 
-def simImpacts(time, blankimage=[1]):
-    """"""
-    time = int(time/1000)
-    x = []
-    y = []
-    while 0 in blankimage:
-        #  - Change this so that while there are still empty spots on the map
-        #    we need to keep simulating craters. This we we can keep going until
-        #    we hit "saturation." Must be careful not to infiniloop, though - #
-        pass
-    for i in range(time):
-        x.append(np.random.rand()*500)
-        y.append(np.random.rand()*500)
-    return np.array(x), np.array(y)
+def simImpacts(blankimage):
+    """
+    """
 
-impactx, impacty = simImpacts(4e6)
+    count = 0
+    cratermap = blankimage
+    while 0 in blankimage[:][:][0]:
+        count += 1
+        #  - This should only examine the 3rd index of our image array
+        #    which is itself an array of rgba values for that particular
+        #    pixel. If each pixel is not empty, that is if the values in
+        #    our rgba are nonzero, then we have reached saturation and can
+        #    break from the loop - #
+        x = np.random.rand()*500
+        y = np.random.rand()*500
+        # - Do something here to generate the size of an impact 
+        #   (discard anything under 10km) and then draw a circle around
+        #   the impact - #
 
-for i in range(len(impactx)):
-    image[impactx[i]][impacty[i]][0] = 0.1
-    image[impactx[i]][impacty[i]][1] = 0.1
-    image[impactx[i]][impacty[i]][2] = 0.1
-    image[impactx[i]][impacty[i]][3] = 1
+        cratermap[x][y][0] += 0.1
+        cratermap[x][y][1] += 0.1
+        cratermap[x][y][2] += 0.1
+        cratermap[x][y][3]  = 1
+    return cratermap, count
 
+image, cratercount = simImpacts(blankimage=image)
+
+print("""%i craters were generated.
+This equates to %.2e years taken to reach saturation.""" %(cratercount, cratercount*1000))
+total = time.time() - start
+print("Time taken to run simulation: %f seconds" %(total))
 pl.imshow(image)
 pl.show()
