@@ -3,8 +3,10 @@ import matplotlib.pyplot as pl
 import time
 
 start = time.time()
+	# Used to test how long the program runs.
 
 image = np.zeros([500, 500, 4])
+	# Create a 500 x 500 x 4 'matrix' for image.
 
 def drawCircle(image, radius, origin):
     """
@@ -25,12 +27,29 @@ def drawCircle(image, radius, origin):
         # - TODO: Fix this so that it's not broken.
         #   the abs() part broke this, but without it we get complex numbers.
         #   once that is fixed, this should work brilliantly - #
+        '''
+		Kyle's notes. The problem seems to be that the "rows" value (I don't knw if x or y) is effecting 
+		the circle size some how. Theoretically, if this were only producing semicircles, creating a ylim
+		of the opposite value should draw the other half. There was this issue of tirangular structures being
+		drawn. It comes from the i values possibly being around 500. 500 * 500 will produce a huge circle.
+        '''
         if i > 499:
             continue
         if i < 1:
             continue
-        ylim = int(abs(radius * (radius - i) * i)**0.5)
-        for j in range(originy - ylim, originy + (ylim + 1)):
+        ylimUp= int((abs((radius * radius) - ((i-originx) * (i-originx))))**0.5)
+        ylimDown= - ylimUp
+        for j in range(originy - ylimUp, originy + (ylimUp + 1)):
+            if j > 499:
+                continue
+            if j < 1:
+                continue
+            # coords.append([i,j])
+            image[i][j][0] += 0.1
+            image[i][j][1] += 0.1
+            image[i][j][2] += 0.1
+            image[i][j][3]  = 1
+        for j in range(originy - ylimDown, originy + (ylimDown + 1)):
             if j > 499:
                 continue
             if j < 1:
