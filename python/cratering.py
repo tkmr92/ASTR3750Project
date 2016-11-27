@@ -72,8 +72,8 @@ def simImpacts(blankimage):
     cratermap = blankimage
     while 0 in cratermap[:][:][0]:
         count += 1
-        if count == 100:
-            return cratermap, count
+       # if count == 100:
+       #     return cratermap, count
         #  - This should only examine the 3rd index of our image array
         #    which is itself an array of rgba values for that particular
         #    pixel. If each pixel is not empty, that is if the values in
