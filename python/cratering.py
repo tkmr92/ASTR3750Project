@@ -61,7 +61,7 @@ def simImpacts(blankimage):
     cratermap = blankimage
     while 0 in cratermap[:][:][0]:
         count += 1
-        if count == 1000:
+        if count == 10000:
             return cratermap, count
         #  - This should only examine the 3rd index of our image array
         #    which is itself an array of rgba values for that particular
@@ -109,18 +109,23 @@ def simImpacts(blankimage):
 
 image, totalcount = simImpacts(blankimage=image)
 temp = []
-for i in (image[:,:,0].tolist()):
+cratercount=list()
+allReds = image[:,:,0]
+normReds = allReds / np.max(allReds) 
+for i in (normReds.tolist()):
     temp = temp+i
-cratercount= len(set(temp))
-
+    cratercount.append(len(set(temp)))
 print(""" Our area saw %i impacters.
 This equates to %.2e years taken to reach saturation.""" %(totalcount, totalcount*1000))
 
-print(""" At the point of saturation, we find that there are %i craters.""" %(cratercount))
+print(""" At the point of saturation, we find that there are %i craters.""" %(cratercount[-1]))
 
 total = time.time() - start
 print("Time taken to run simulation: %f seconds" %(total))
 # normalize=np.max(image[:][:][0:2])
 # image[:][:][0:2] = image[:][:][0:2] / normalize
 pl.imshow(image)
+pl.show()
+
+pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
 pl.show()
