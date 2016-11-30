@@ -113,11 +113,11 @@ def simImpacts(blankimage):
         #     cratermap[xval][yval][1] += 0.1
         #     cratermap[xval][yval][2] += 0.1
         #     cratermap[xval][yval][3]  = 1
-        print(count)
+        print("Total craters: %i  Visible craters: %i" %(count, visibleCount))
         visibleCount -= lessCraters
     return cratermap, count, visibleCount
 
-image, totalcount = simImpacts(blankimage=image)
+image, totalcount, visible = simImpacts(blankimage=image)
 temp = []
 cratercount=list()
 allReds = image[:,:,0]
@@ -125,6 +125,7 @@ normReds = allReds / np.max(allReds)
 for i in (normReds.tolist()):
     temp = temp+i
     cratercount.append(len(set(temp)))
+print("""We have %i visible craters""" %visible)
 print(""" Our area saw %i impacters.
 This equates to %.2e years taken to reach saturation.""" %(totalcount, totalcount*1000))
 
