@@ -54,7 +54,7 @@ def drawCircle(image, radius, origin, unique):
     fewerCraters = 0
     for coolColorz in oldUniques:
         if coolColorz in image[:][:]:
-            fewerCraters -= 1
+            fewerCraters += 1
 
     return(image, fewerCraters)
 
