@@ -69,6 +69,22 @@ def simImpacts(blankimage):
     uniquelist = []
     cratermap = blankimage
     while 0 in cratermap[:][:][0]:
+        if count == 250:
+            pl.imshow(image)
+            pl.savefig('NonUniform1.png')
+        if count == 500:
+            pl.imshow(image)
+            pl.savefig('NonUniform2.png')
+        if count == 750:
+            pl.imshow(image)
+            pl.savefig('NonUniform3.png')
+        if count == 1000:
+            pl.imshow(image)
+            pl.savefig('NonUniform4.png')
+        if count == 1000:
+            return cratermap, count, uniquelist
+
+
         impactsize = int(np.random.lognormal(1., 1., 1.) * 10.)
 
         if impactsize < 10:
@@ -97,27 +113,27 @@ def simImpacts(blankimage):
             uniquelist.pop(uniquelist.index(val))
         unique +=1
         
-        print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
-    print(cratermap, count, len(uniquelist))
-    return cratermap, count , len(uniquelist)
+        # print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
+    return cratermap, count, uniquelist
 
-image, totalcount, visible = simImpacts(blankimage=image)
+image, totalcount, cratercount = simImpacts(blankimage=image)
 temp = []
 
 total = time.time() - start
 
 print("""We have %i visible craters.
-Our area saw %i impacters.
+Our area saw %i impactors.
 This equates to %.2e years taken to reach saturation.
-At the point of saturation, we find that there are %i craters.
 
-This simulation took %f seconds to run.""" %(visible, totalcount, totalcount*1000, cratercount[-1], total))
+This simulation took %f seconds to run.""" %(len(visible), totalcount, totalcount*1000, total))
 
 
 # normalize=np.max(image[:][:][0:2])
 # image[:][:][0:2] = image[:][:][0:2] / normalize
 pl.imshow(image)
-pl.show()
+pl.savefig('NonUniformSaturation.png')
 
 pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
-pl.show()
+pl.xlabel('Time')
+pl.ylabel('Visible Craters')
+pl.savefig('Crater ')
