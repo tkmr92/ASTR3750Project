@@ -78,19 +78,19 @@ def simImpacts(blankimage):
     while 0 in cratermap[:,:,0]:
         if count == 250000:
             pl.imshow(image)
-            pl.savefig('NonUniform1quick.png')
+            pl.savefig('NonUniform1.png')
             pl.clf()
         if count == 500000:
             pl.imshow(image)
-            pl.savefig('NonUniform2quick.png')
+            pl.savefig('NonUniform2.png')
             pl.clf()
         if count == 750000:
             pl.imshow(image)
-            pl.savefig('NonUniform3quick.png')
+            pl.savefig('NonUniform3.png')
             pl.clf()
         if count == 1000000:
             pl.imshow(image)
-            pl.savefig('NonUniform4quick.png')
+            pl.savefig('NonUniform4.png')
             pl.clf()
         # if count == 1001:
         #     return cratermap, count, uniquelist, cratersatstep
@@ -122,13 +122,12 @@ def simImpacts(blankimage):
         
         print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
         print("Count: %i" %count)
-    return cratermap, count
+    return cratermap, count, uniquelist, cratersatstep
 
-image, totalcount = simImpacts(blankimage=image)
+image, totalcount, visible, cratercount = simImpacts(blankimage=image)
 temp = []
 
 total = time.time() - start
-visible = [0]
 
 print("""We have %i visible craters.
 Our area saw %i impactors.
@@ -140,11 +139,11 @@ This simulation took %f seconds to run.""" %(len(visible), totalcount, totalcoun
 # normalize=np.max(image[:][:][0:2])
 # image[:][:][0:2] = image[:][:][0:2] / normalize
 pl.imshow(image)
-pl.savefig('NonUniformSaturationquick.png')
+pl.savefig('NonUniformSaturation.png')
 pl.clf()
 
-# pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
-# pl.xlabel('Time')
-# pl.ylabel('Visible Craters')
-# pl.title('Visible Craters vs Time')
-# pl.savefig('VisibleCratersvsTimeNonUniform.png')
+pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
+pl.xlabel('Time')
+pl.ylabel('Visible Craters')
+pl.title('Visible Craters vs Time')
+pl.savefig('VisibleCratersvsTimeNonUniform.png')
