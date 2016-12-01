@@ -45,7 +45,7 @@ def drawCircle(image, radius, origin, unique):
         # - If we would draw outside of our image array, skip the iteration - #
         if (i > (len(image) - 1)) or (i < 1):
             continue
-        # - Calculate which how we will draw the y+- part of the circle - #
+        # - Calculate how we will draw the y+- part of the circle - #
         drawCalc = (radius * radius) - ((i-origin[0]) * (i-origin[0]))
         if drawCalc < 0:
             ylim = -int(( -drawCalc) ** .5)
@@ -150,12 +150,12 @@ This simulation took %f seconds to run.""" %(len(visible), totalcount, totalcoun
 # - Save our final crater image - #
 pl.imshow(image)
 pl.savefig("../images/uniformSaturation.png")
-pl.title('Surface at crater saturation')
+pl.title('Craters at Saturation')
 pl.clf()
 
 # - Generate a plot of how many craters we have visible at each step in time - #
 pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
 pl.xlabel('Time')
-pl.ylabel('# Craters Visible')
-pl.title('Visible Craters vs Time')
+pl.ylabel('Visible Craters')
+pl.title('Visible Craters vs Time (Uniform)')
 pl.savefig('../images/VisiblecratersvsTimeUniform.png')
