@@ -1,8 +1,15 @@
+'''
+500x500km crater simulation project, with uniform impactor size (10km radius craters)
+
+Written by:
+    Kyle Crabb
+    Tarek Mackler
+'''
 import numpy as np
 import matplotlib.pyplot as pl
 import time
 
-# -- Needed to timr our simulation -- #
+# -- Needed to time our simulation -- #
 start = time.time()
 
 # -- Create a 500x500x4 matrix to be used for our crater map -- #
@@ -75,69 +82,80 @@ def simImpacts(blankimage):
             An array of how many craters were visible at each timestep
     """
 
+    # - Initialize variables - #
     count = 0
     unique = .001
     uniquelist = []
     cratersatstep = []
     cratermap = blankimage
+
+    # -- Loop until saturation -- #
     while True:
+        # - Wait until we have at least 10000 iterations before checking if we
+        #   have reached saturation - #
         if len(cratersatstep) > 10000:
+            # - We calculate average by comparing the average of the last 1000
+            #   to the average of the last 100 - #
             smallAvg = np.average(cratersatstep[-100:])
             bigAvg = np.average(cratersatstep[-1000:])
+            # - If we have reached saturation we can leave the loop - #
             if abs( smallAvg - bigAvg ) < (bigAvg * (1 - 0.99)):
-                # print(smallAvg)
-                # print(bigAvg)
                 return cratermap, count, uniquelist, cratersatstep
-        impactsize = 10
 
-        count += 1
-        # if count == 100:
-        #     return cratermap, count #, uniquelist, cratersvisible
+        # - Every 1000 impacts we should save an image so we can compare - #
         if count%1000 == 0:
             pl.imshow(image)
-            pl.savefig('Uniform'+str(count/1000)+'.png')
+            pl.title('Uniform Craters after '+str(int(count))+' Impactors')
+            pl.savefig('../images/Uniform'+str(int(count/1000))+'.png')
             pl.clf()
-        #  - This should only examine the 3rd index of our image array
-        #    which is itself an array of rgba values for that particular
-        #    pixel. If each pixel is not empty, that is if the values in
-        #    our rgba are nonzero, then we have reached saturation and can
-        #    break from the loop - #
 
-        # -- Generate the location for the center of the crater -- #
+        # --- BEGIN SIMULATION CODE --- #
+        # - Increment our impactor count - #
+        count += 1
+
+        # - Generate the location for the center of the crater - #
         x = int(np.random.rand()*500.)
         y = int(np.random.rand()*500.)
 
-        # -- Generate and draw a crater for our impact -- #
-        # - *10 here to make sure that our crater sizes are (mostly) above 10km - #
-        cratermap = drawCircle(cratermap, int(impactsize / 2.), [x,y], unique)
-        uniquelist = np.unique(cratermap[:,:,0])
-        cratersatstep.append(len(uniquelist))
-        unique += .001
-        # cratersvisible.append(len(uniquelist))
+        # - All of our impactors are the same size since this is our uniform sim - #
+        impactsize = 10
 
+        # - Pass our image array, the impact size (divided by 2 for radius)
+        #   origin of the impact, and a unique color value to drawCircle function - #
+        cratermap = drawCircle(cratermap, int(impactsize / 2.), [x,y], unique)
+        # - Get all of the unique color values still in cratermap - #
+        uniquelist = np.unique(cratermap[:,:,0])
+        # - Keep track of how many craters we can see at each step of the loop - #
+        cratersatstep.append(len(uniquelist))
+
+        # - Add to our unique value to keep it unique! - #
+        unique += .001
         
-        # print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
     return cratermap, count , uniquelist, cratersvisible
 
+
+# - SIMULATE - #
 image, totalcount, visible, cratercount = simImpacts(blankimage=image)
 
+# - Calculate how long it took to run the simulation - #
 total = time.time() - start
 
+# - Tell the user the pertinent info - #
 print("""We have %i visible craters.
 Our area saw %i impacters.
 This equates to %.2e years taken to reach saturation.
 
 This simulation took %f seconds to run.""" %(len(visible), totalcount, totalcount*1000, total))
 
-
-# normalize=np.max(image[:][:][0:2])
-# image[:][:][0:2] = image[:][:][0:2] / normalize
+# - Save our final crater image - #
 pl.imshow(image)
-pl.savefig("uniformSaturation.png")
+pl.savefig("../images/uniformSaturation.png")
+pl.title('Surface at crater saturation')
 pl.clf()
 
+# - Generate a plot of how many craters we have visible at each step in time - #
 pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
 pl.xlabel('Time')
 pl.ylabel('# Craters Visible')
 pl.title('Visible Craters vs Time')
-pl.savefig('VisiblecratersvstimeUniform.png')
+pl.savefig('../images/VisiblecratersvsTimeUniform.png')
