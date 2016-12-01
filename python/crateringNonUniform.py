@@ -8,6 +8,12 @@ start = time.time()
 # -- Create a 500x500x4 matrix to be used for our crater map -- #
 image = np.zeros([500, 500, 4])
 
+def genCratersize():
+    bucket = np.random.logseries(0.8)
+    cratersize = int(np.random.uniform(10*bucket, 20*bucket))
+    print("Crater size: %i" %cratersize)
+    return cratersize
+
 def drawCircle(image, radius, origin, unique):
     """
         This function will take paramaters and use them to draw a filled
@@ -66,31 +72,31 @@ def simImpacts(blankimage):
 
     count = 0
     unique = 1
-    uniquelist = []
-    cratersatstep = []
+    # uniquelist = []
+    # cratersatstep = []
     cratermap = blankimage
-    while 0 in cratermap[:][:][0]:
+    while 0 in cratermap[:,:,0]:
         if count == 250000:
             pl.imshow(image)
-            pl.savefig('NonUniform1.png')
+            pl.savefig('NonUniform1quick.png')
             pl.clf()
         if count == 500000:
             pl.imshow(image)
-            pl.savefig('NonUniform2.png')
+            pl.savefig('NonUniform2quick.png')
             pl.clf()
         if count == 750000:
             pl.imshow(image)
-            pl.savefig('NonUniform3.png')
+            pl.savefig('NonUniform3quick.png')
             pl.clf()
         if count == 1000000:
             pl.imshow(image)
-            pl.savefig('NonUniform4.png')
+            pl.savefig('NonUniform4quick.png')
             pl.clf()
         # if count == 1001:
         #     return cratermap, count, uniquelist, cratersatstep
 
 
-        impactsize = int(np.random.lognormal(1., 1., 1.) * 10.)
+        impactsize = genCratersize()
 
         if impactsize < 10:
             continue
@@ -109,21 +115,20 @@ def simImpacts(blankimage):
         # -- Generate and draw a crater for our impact -- #
         # - *10 here to make sure that our crater sizes are (mostly) above 10km - #
         cratermap = drawCircle(cratermap, int(impactsize / 2.), [x,y], unique)
-        uniquelist.append(unique)
-        for val in uniquelist:
-            if val in cratermap[:,:,0]:
-                continue
-            uniquelist.pop(uniquelist.index(val))
-        unique +=1
+        uniquelist = set(cratermap[:,:,0])
         cratersatstep.append(len(uniquelist))
-        
-        # print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
-    return cratermap, count, uniquelist, cratersatstep
 
-image, totalcount, visible, cratercount = simImpacts(blankimage=image)
+        unique += .000001
+        
+        print("Total craters: %i  Visible craters: %i" %(count, len(uniquelist)))
+        print("Count: %i" %count)
+    return cratermap, count
+
+image, totalcount = simImpacts(blankimage=image)
 temp = []
 
 total = time.time() - start
+visible = [0]
 
 print("""We have %i visible craters.
 Our area saw %i impactors.
@@ -135,11 +140,11 @@ This simulation took %f seconds to run.""" %(len(visible), totalcount, totalcoun
 # normalize=np.max(image[:][:][0:2])
 # image[:][:][0:2] = image[:][:][0:2] / normalize
 pl.imshow(image)
-pl.savefig('NonUniformSaturation.png')
+pl.savefig('NonUniformSaturationquick.png')
 pl.clf()
 
-pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
-pl.xlabel('Time')
-pl.ylabel('Visible Craters')
-pl.title('Visible Craters vs Time')
-pl.savefig('VisibleCratersvsTimeNonUniform.png')
+# pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
+# pl.xlabel('Time')
+# pl.ylabel('Visible Craters')
+# pl.title('Visible Craters vs Time')
+# pl.savefig('VisibleCratersvsTimeNonUniform.png')
