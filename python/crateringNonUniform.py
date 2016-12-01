@@ -115,7 +115,7 @@ def simImpacts(blankimage):
         # -- Generate and draw a crater for our impact -- #
         # - *10 here to make sure that our crater sizes are (mostly) above 10km - #
         cratermap = drawCircle(cratermap, int(impactsize / 2.), [x,y], unique)
-        uniquelist = set(cratermap[:,:,0])
+        uniquelist = np.unique(cratermap[:,:,0])
         cratersatstep.append(len(uniquelist))
 
         unique += .000001
