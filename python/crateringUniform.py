@@ -65,8 +65,8 @@ def drawCircle(image, radius, origin, unique):
 
 def simImpacts(blankimage):
     """
-        Takes a blank image array and draws craters on it until every pixel
-        of the image is filled with a crater
+        Takes a blank image array and draws craters on it until we reach 
+        "saturation"
     Inputs:
         blankimage:
             3-D array, where dimensions 1 and 2 are the size of the image.
@@ -78,7 +78,7 @@ def simImpacts(blankimage):
             The amount of impactors that hit our 'surface'
         uniquelist:
             A list of unique values (used to identify unique craters)
-        cratersvisible:
+        cratersatstep:
             An array of how many craters were visible at each timestep
     """
 
@@ -155,7 +155,7 @@ pl.clf()
 
 # - Generate a plot of how many craters we have visible at each step in time - #
 pl.scatter(np.linspace(0,len(cratercount), len(cratercount)), cratercount)
-pl.xlabel('Time')
+pl.xlabel('Time (x1000)')
 pl.ylabel('Visible Craters')
 pl.title('Visible Craters vs Time (Uniform)')
 pl.savefig('../images/VisiblecratersvsTimeUniform.png')
